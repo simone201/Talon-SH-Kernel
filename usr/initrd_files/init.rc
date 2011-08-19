@@ -550,10 +550,11 @@ on boot
     # Simply Tweaks - Midnight Battery Tweak for LaptopMode
     write /proc/sys/vm/laptop_mode 5
 
-    # Simply Tweaks - Read-Ahead Parameters for SD and BML
+    # Simply Tweaks - Read-Ahead Parameters for BML and SD
     write /sys/devices/virtual/bdi/138:9/read_ahead_kb 64
     write /sys/devices/virtual/bdi/138:10/read_ahead_kb 64
     write /sys/devices/virtual/bdi/138:11/read_ahead_kb 64
+
     write /sys/devices/virtual/bdi/179:0/read_ahead_kb 1024
     write /sys/devices/virtual/bdi/179:8/read_ahead_kb 1024
     write /sys/devices/virtual/bdi/default/read_ahead_kb 1024
@@ -564,7 +565,8 @@ on boot
     write /proc/sys/kernel/sched_min_granularity_ns 400000    
 
     # Simply Tweaks - Touchscreen Sensitivity
-    write /sys/class/touch/switch/set_touchscreen 7040
+    write /sys/class/touch/switch/set_touchscreen 08000
+    write /sys/class/touch/switch/set_touchscreen 13008
 
     # Simply Tweaks - Kernel Tweaks
     write /proc/sys/kernel/msgmni 2048
