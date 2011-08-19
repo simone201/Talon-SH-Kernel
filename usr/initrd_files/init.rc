@@ -562,11 +562,7 @@ on boot
     # Simply Tweaks - Misc Battery Tweaks
     write /proc/sys/kernel/sched_latency_ns 600000
     write /proc/sys/kernel/sched_wakeup_granularity_ns 400000
-    write /proc/sys/kernel/sched_min_granularity_ns 400000    
-
-    # Simply Tweaks - Touchscreen Sensitivity
-    write /sys/class/touch/switch/set_touchscreen 08000
-    write /sys/class/touch/switch/set_touchscreen 13008
+    write /proc/sys/kernel/sched_min_granularity_ns 400000
 
     # Simply Tweaks - Kernel Tweaks
     write /proc/sys/kernel/msgmni 2048

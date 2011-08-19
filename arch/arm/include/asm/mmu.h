@@ -15,7 +15,7 @@ typedef struct {
 #define ASID(mm)	((mm)->context.id & 255)
 
 /* init_mm.context.id_lock should be initialized. */
-#define INIT_MM_CONTEXT(name)
+#define INIT_MM_CONTEXT(name)											\
 	.context.id_lock    = __SPIN_LOCK_UNLOCKED(name.context.id_lock),
 #else
 #define ASID(mm)	(0)
