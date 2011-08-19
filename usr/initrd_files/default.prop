@@ -1,0 +1,6 @@
+#
+# ADDITIONAL_DEFAULT_PROPERTIES
+#
+ro.allow.mock.location=0
+ro.debuggable=0
+persist.service.adb.enable=1

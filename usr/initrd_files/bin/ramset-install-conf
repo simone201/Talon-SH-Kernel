@@ -1,0 +1,16 @@
+#!/bin/sh
+
+source /bin/ram.conf.default
+RAM_CONF_VERSION_CURRENT=$RAM_CONF_VERSION
+RAM_CONF_VERSION=0
+
+if [ ! -e /system/etc/ram.conf ]; then
+ /bin/cp /bin/ram.conf.default /system/etc/ram.conf
+fi;
+
+source /system/etc/ram.conf
+
+if [ ! "$RAM_CONF_VERSION" == "$RAM_CONF_VERSION_CURRENT" ]; then
+ /bin/cp /bin/ram.conf.default /system/etc/ram.conf
+ source /system/etc/ram.conf
+fi;

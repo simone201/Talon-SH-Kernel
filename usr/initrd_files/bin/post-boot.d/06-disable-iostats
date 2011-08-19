@@ -1,0 +1,9 @@
+#!/bin/sh
+
+STL=`ls -d /sys/block/stl*`;
+BML=`ls -d /sys/block/bml*`;
+MMC=`ls -d /sys/block/mmc*`;
+for k in $STL $BML $MMC;
+do
+ echo "0" > $k/queue/iostats
+done

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+/bin/sh /voodoo/bin/remount_system_rw
+DIR=`pwd`
+if test -e /system/xbin/busybox; then
+ cd /system/xbin
+ for i in $(/system/xbin/busybox --list)
+ do
+  if ! test -e $i; then ln -s busybox $i; fi
+ done
+ echo '/system/xbin/busybox ls -l $*' > /system/xbin/ll
+ chmod 777 /system/xbin/ll
+ cd $DIR
+fi
+/bin/sh /voodoo/bin/remount_system_ro

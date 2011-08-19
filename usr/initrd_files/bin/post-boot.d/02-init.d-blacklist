@@ -1,0 +1,9 @@
+#!/bin/sh
+/bin/sh /voodoo/bin/remount_system_rw
+DIR=`pwd`
+cd /system/etc/init.d
+for i in `grep -l lowmemorykiller *` S90scheduler S80galaxian S99finish S98system_tweak 89system_tweak S98screenstate_scaling 90screenstate_scaling S97r$
+ if test -e $i; then rm $i;fi;
+done
+cd $DIR
+/bin/sh /voodoo/bin/remount_system_ro

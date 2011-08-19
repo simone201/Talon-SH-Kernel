@@ -1,0 +1,14 @@
+#!/bin/sh
+
+/bin/mount -o remount,rw /
+/bin/mount -o remount,rw /system
+
+/bin/cp -a /bin/logcat* /bin/ramset /system/xbin/
+/bin/rm -r /voodoo/root/usr/*
+/bin/rm /lib/*.0
+/bin/rm /lib/*.so
+#/bin/rm -r /sbin
+/bin/rm /.gitignore
+
+/bin/mount -o remount,ro /
+/bin/mount -o remount,ro /system

@@ -1,0 +1,21 @@
+# Script that enables/disables the ZRAM Feature of Talon Kernel
+# by Simone201 - Simply Galaxy Team
+
+su -c "if test -e /data/zram.conf; then
+
+	rm -f /data/zram.conf
+	echo
+	echo ZRAM is now disabled
+	echo Reboot to take effect!
+	echo
+
+else
+
+	cp /bin/zram.conf /data/zram.conf
+	echo
+	echo ZRAM is now enabled
+	echo Reboot to take effect!
+	echo
+
+fi"
+
