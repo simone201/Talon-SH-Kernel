@@ -5,5 +5,4 @@ for i in `/bin/find /data/property -name "persist.tweak*"`; do
 done
 
 if test -e /system/cfroot; then /bin/rm -rf /system/cfroot; fi
-if test -e /system/etc/init.d/S77simplytweaks; then /bin/rm -f /system/etc/init.d/S77simplytweaks; fi
 /bin/sh /voodoo/bin/remount_system_ro
