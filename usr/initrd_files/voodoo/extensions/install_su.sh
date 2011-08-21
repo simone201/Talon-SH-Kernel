@@ -1,7 +1,8 @@
 # Voodoo lagfix extension
+# Updated SU Binary
 
-name='secure su binary for Superuser apk'
-source='/voodoo/extensions/su/su-2.3.6.1-ef'
+name='secure su binary for Superuser apk - 2.3.6.3-efgh'
+source='/voodoo/extensions/su/su-2.3.6.3-efgh'
 dest='/system/xbin/su'
 
 extension_install_su()
@@ -18,7 +19,6 @@ install_condition()
 {
 	test -d "/system/xbin"
 }
-
 
 if install_condition; then
 	# test if the su binary already exist in xbin
@@ -39,3 +39,4 @@ if install_condition; then
 else
 	log "$name cannot be installed"
 fi
+
