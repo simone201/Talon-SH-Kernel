@@ -67,7 +67,6 @@ extern struct class *sec_class;
 struct i2c_client *fg_i2c_client;
 
 static void max17040_update_values(struct max17040_chip *chip);
-static void max17043_set_threshold(struct i2c_client *client, int mode);
 
 static int max17040_get_property(struct power_supply *psy,
 			    enum power_supply_property psp,
@@ -286,9 +285,6 @@ static int max17040_reset_chip(struct i2c_client *client)
 
 static void max17040_update_values(struct max17040_chip *chip)
 {
-      int i;
-      int value;
-	  
 	max17040_get_vcell(chip->client);
 	max17040_get_soc(chip->client);
 	max17040_get_online(chip->client);
@@ -352,7 +348,7 @@ static int __devinit max17040_probe(struct i2c_client *client,
 	if (!chip)
 		return -ENOMEM;
 
-	chip->client = client;
+	chip->client = fg_i2c_client = client;
 	chip->pdata = client->dev.platform_data;
 
 	i2c_set_clientdata(client, chip);
@@ -363,6 +359,8 @@ static int __devinit max17040_probe(struct i2c_client *client,
 	chip->battery.properties	= max17040_battery_props;
 	chip->battery.num_properties	= ARRAY_SIZE(max17040_battery_props);
 	
+	max17040_update_values(chip);
+	
 	if (chip->pdata && chip->pdata->power_supply_register)
 		ret = chip->pdata->power_supply_register(&client->dev, &chip->battery);
 	else
@@ -372,44 +370,11 @@ static int __devinit max17040_probe(struct i2c_client *client,
 		goto err_psy_register;
 	}
 
-	if (chip->pdata)
-	{
-		i2c_smbus_write_word_data(client, MAX17040_RCOMP_MSB,   swab16(chip->pdata->rcomp_value));	
-	}
-   
-   
-
-#if defined (ATT_TMO_COMMON)
-       fg_i2c_client = client;
-       fg_chip = chip;
-	   
-	rcomp_status = -1;
-	max17040_low_battery = 0;
-       max17040_lowbat_warning = 0;
-	   
-	max17040_update_values(chip);
 	max17040_get_version(client);
 
-	INIT_WORK(&low_bat_work, s3c_low_bat_work);	
-       wake_lock_init(&low_battery_wake_lock, WAKE_LOCK_SUSPEND, "low_battery_wake_lock");
-       	
-//	ret = request_threaded_irq(  client->irq  , NULL, low_battery_isr,
-//							   IRQF_TRIGGER_FALLING, "fuel gauge low battery irq", (void *) client);
-
-	set_irq_type(LOW_BATTERY_IRQ, IRQ_TYPE_EDGE_FALLING);
-	ret = request_irq(LOW_BATTERY_IRQ, low_battery_isr, IRQF_SAMPLE_RANDOM, "low battery irq", (void *) client);
-
-	if (ret) {
-					dev_err(&client->dev,"%s : Failed to request pmic irq\n", __func__);
-					goto err_fg_atcmd;	
-		 	}
-
-	ret = enable_irq_wake(client->irq);
-	if (ret) {
-					dev_err(&client->dev, "%s : Failed to enable pmic irq wake\n", __func__);
-					goto err_irq;
-	          }
-#endif
+	if (chip->pdata)
+		i2c_smbus_write_word_data(client, MAX17040_RCOMP_MSB,
+			swab16(chip->pdata->rcomp_value));
 
 	chip->fg_atcmd = device_create(sec_class, NULL, MKDEV(MAX17040_MAJOR, 0),
 					NULL, "fg_atcom_test");

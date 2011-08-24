@@ -42,8 +42,6 @@ static struct mfd_cell max8998_devs[] = {
 	},
 };
 
-struct i2c_client * max8998_i2cptr;
-
 int max8998_read_reg(struct i2c_client *i2c, u8 reg, u8 *dest)
 {
 	struct max8998_dev *max8998 = i2c_get_clientdata(i2c);
@@ -120,28 +118,6 @@ int max8998_update_reg(struct i2c_client *i2c, u8 reg, u8 val, u8 mask)
 }
 EXPORT_SYMBOL(max8998_update_reg);
 
-
-#define E32KhzCP_bit  1 << 6
-int  EN32KhzCP_CTRL(int on)
-{
-     int ret;
-	 
-     printk("[EN32KhzCP_CTRL]  on = %d \n",on);
-    
-     if(on)
-     	{
-     		ret = max8998_update_reg(max8998_i2cptr, 0x14, E32KhzCP_bit, E32KhzCP_bit);
-     	}
-     else
-     	{
-    		ret = max8998_update_reg(max8998_i2cptr, 0x14, 0x0, E32KhzCP_bit);
-     	}
-
-	 return ret;
-}
-EXPORT_SYMBOL(EN32KhzCP_CTRL);
-
-
 static int max8998_i2c_probe(struct i2c_client *i2c,
 			    const struct i2c_device_id *id)
 {
@@ -156,7 +132,6 @@ static int max8998_i2c_probe(struct i2c_client *i2c,
 	i2c_set_clientdata(i2c, max8998);
 	max8998->dev = &i2c->dev;
 	max8998->i2c = i2c;
-	max8998_i2cptr = i2c;
 	max8998->irq = i2c->irq;
 	max8998->type = id->driver_data;
 //	if (pdata) {

@@ -28,22 +28,12 @@
 #include <mach/regs-irq.h>
 #include <asm/fiq_glue.h>
 #include <asm/irq.h>
-#include <mach/gpio.h>
-#include <plat/gpio-cfg.h>
-#include <mach/gpio-aries.h>
 
 #include <plat/pm.h>
 #include <plat/irq-eint-group.h>
 #include <mach/pm-core.h>
 
 /* for external use */
-
-/* For checking pending interrupt */
-#define S5PV210_GPIOREG(x)		(S5P_VA_GPIO + (x))
-#define S5PV210_EINT1PEND			S5PV210_GPIOREG(0xF44)	/* EINT31[0] ~  EINT31[7] */
-#define S5PV210_EINT2PEND			S5PV210_GPIOREG(0xF48)	/* EINT32[0] ~  EINT32[7] */
-#define EINTPEND1_BIT_ONEDRAM		(1 << 3)
-#define EINTPEND2_BIT_MICROUSB	(1 << 7)
 
 unsigned long s3c_pm_flags;
 
@@ -306,34 +296,6 @@ static void s3c_pm_show_resume_irqs(int start, unsigned long which,
 	}
 }
 
-bool s3c_pm_check_pending_interrupt(void)
-{
-	bool ret=true;
-
-	unsigned int s5pc11x_pm_wakeup_eint1_pend = 0;
-	unsigned int s5pc11x_pm_wakeup_eint2_pend = 0;
-
-
-	s5pc11x_pm_wakeup_eint1_pend =__raw_readl(S5PV210_EINT1PEND);
-	s5pc11x_pm_wakeup_eint2_pend =__raw_readl(S5PV210_EINT2PEND);
-
-	if(s5pc11x_pm_wakeup_eint1_pend) {	
-		if(s5pc11x_pm_wakeup_eint1_pend & EINTPEND1_BIT_ONEDRAM) {
-			printk(KERN_DEBUG "%s: cp interrupt pending.\n", __func__);
-			ret=false;
-		}
-	}
-
-	if(s5pc11x_pm_wakeup_eint2_pend) {
-		if(s5pc11x_pm_wakeup_eint2_pend & EINTPEND2_BIT_MICROUSB) {
-			printk(KERN_DEBUG "%s: micro usb interrupt pending.\n", __func__);
-			ret=false;
-		}
-	}
-
-	return ret;
-}
-
 void (*pm_cpu_prep)(void);
 void (*pm_cpu_sleep)(void);
 void (*pm_cpu_restore)(void);
@@ -350,24 +312,6 @@ static int s3c_pm_enter(suspend_state_t state)
 	static unsigned long regs_save[16];
 
 	/* ensure the debug is initialised (if enabled) */
-
-	/* 20110210 - check pending interrupt to wakeup device */
-	if(!s3c_pm_check_pending_interrupt())
-	{
-		printk(KERN_ERR "interrupt pending. wakeup!!(1)\n", __func__);	
-		return -EINVAL;
-	}
-
-	/* 20110125 - control power of moviNAND at PM and add 400ms delay for stabilization of moviNAND. */
-	gpio_set_value(GPIO_MASSMEMORY_EN, 0);
-	mdelay(400);
-
-	/* 20110210 - check pending interrupt to wakeup device */
-	if(!s3c_pm_check_pending_interrupt())
-	{
-		printk(KERN_ERR "interrupt pending. wakeup!!(2)\n", __func__);	
-		return -EINVAL;
-	}
 
 	s3c_pm_debug_init();
 
