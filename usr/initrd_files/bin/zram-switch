@@ -3,7 +3,7 @@
 
 su -c "if test -e /data/zram.conf; then
 
-	rm -f /data/zram.conf
+	rm /data/zram.conf
 	echo
 	echo ZRAM is now disabled
 	echo Reboot to take effect!
