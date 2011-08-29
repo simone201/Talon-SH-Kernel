@@ -438,8 +438,11 @@ int s3c_vbus_enable(struct usb_gadget *gadget, int enable)
  if (enable) {
   dev_info(&gadget->dev, "USB udc %d,%d lock\n", dev->udc_enabled, enable);
   //wake_lock(&dev->udc_wake_lock);
-
+#ifdef CONFIG_CPU_UV
   s5pv210_lock_dvfs_high_level(DVFS_LOCK_TOKEN_8, L4); //100Mhz lock
+#else
+  s5pv210_lock_dvfs_high_level(DVFS_LOCK_TOKEN_8, L5); //100Mhz lock
+#endif
 
  } else {
   dev_info(&gadget->dev, "USB udc %d,%d unlock\n", dev->udc_enabled, enable);

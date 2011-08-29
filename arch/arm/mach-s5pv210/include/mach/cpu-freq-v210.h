@@ -27,12 +27,22 @@
 #define APLL_VAL_800	((1<<31)|(100<<16)|(3<<8)|(1))
 
 enum perf_level {
+#ifdef CONFIG_CPU_UV
 	L0 = 0,	
 	L1,
 	L2,
 	L3,
 	L4,
 	MAX_PERF_LEVEL = L4,
+#else
+	L0 = 0,	
+	L1,
+	L2,
+	L3,
+	L4,
+	L5,
+	MAX_PERF_LEVEL = L5,
+#endif
 };
 
 #define SLEEP_FREQ      (400 * 1000) /* Use 400MHz when entering sleep */
