@@ -65,7 +65,7 @@ static struct cpufreq_frequency_table freq_table[] = {
         {L0, 1440*1000},
 #endif
 #ifdef CONFIG_CPU_1400
-	{L0, 1400*1000},
+		{L0, 1400*1000},
 #endif
 #ifdef CONFIG_CPU_1300
         {L0, 1300*1000},
