@@ -1,6 +1,7 @@
 # Script to build for the captivate and zip the package.
 # Written by Evan alias ytt3r
 # modified by kodos96
+# modified by simone201 - added concurrency level (for multicore processors)
 
 export CONCURRENCY_LEVEL=4
 
@@ -8,7 +9,7 @@ if ! [ -e .config ]; then
  make $1
 fi
 
-# Linaro Android 4.5 (GCC 4.5.4) toolchain - http://www.linaro.org
+# Linaro Android 4.6 (GCC 4.6.2) toolchain - http://www.linaro.org
 export CROSS_COMPILE="/home/simone/android-toolchain-eabi/bin/arm-eabi-"
 
 export KBUILD_BUILD_VERSION="Talon-SH-T4s"
