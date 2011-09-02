@@ -124,13 +124,6 @@ config CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
 	  Be aware that not all cpufreq drivers support the conservative
 	  governor. If unsure have a look at the help section of the
 	  driver. Fallback governor will be the performance governor.
-	 
-config CPU_FREQ_DEFAULT_GOV_BRAZILIANWAX
-  bool "brazilianwax"
-  select CPU_FREQ_GOV_BRAZILIANWAX
-  select CPU_FREQ_GOV_PERFORMANCE
-  help
-	Use the CPUFreq governor 'brazilianwax' as default.
 
 config CPU_FREQ_DEFAULT_GOV_INTERACTIVE
   bool "interactive"
@@ -231,14 +224,6 @@ config CPU_FREQ_GOV_ONDEMAND
 	  For details, take a look at linux/Documentation/cpu-freq.
 
 	  If in doubt, say N.
-	  
-config CPU_FREQ_GOV_BRAZILIANWAX
-  tristate "'brazilianwax' cpufreq governor"
-  depends on CPU_FREQ
-  help
-   brazilianwax' - a "slightly more agressive smart" optimized governor!
- 
-   If in doubt, say Y.
 
 config CPU_FREQ_GOV_INTERACTIVE
   tristate "'interactive' cpufreq policy governor"
