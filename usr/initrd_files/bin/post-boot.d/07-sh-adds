@@ -11,7 +11,7 @@ if test -e /system/etc/init.d/S_volt_scheduler; then /bin/rm -f /system/etc/init
 # If we find a bootanimation.zip then we must rename it to sanim.zip to play it!
 
 if test -e /system/media/bootanimation.zip; then
-	/bin/mv /system/media/bootanimation.zip /system/media/sanim.zip
+	/bin/mv /system/media/bootanimation.zip /system/media/sanim.zip;
 fi
 
 /bin/sh /voodoo/bin/remount_system_ro
