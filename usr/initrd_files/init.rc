@@ -507,8 +507,8 @@ on boot
     setprop ro.SECONDARY_SERVER_ADJ 2
     setprop ro.BACKUP_APP_ADJ 2
     setprop ro.HOME_APP_ADJ 4
-    setprop ro.HIDDEN_APP_MIN_ADJ 7
-    setprop ro.CONTENT_PROVIDER_MEM 14
+    setprop ro.HIDDEN_APP_MIN_ADJ 4
+    setprop ro.CONTENT_PROVIDER_MEM 6
     setprop ro.EMPTY_APP_ADJ 15
 
 # to enable wifi
@@ -531,7 +531,7 @@ on boot
 # Note that the driver only supports 6 slots, so we have combined some of
 # the classes into the same memory level; the associated processes of higher
 # classes will still be killed first.
-    write /sys/module/lowmemorykiller/parameters/adj 0,1,2,7,14,15
+    write /sys/module/lowmemorykiller/parameters/adj 0,1,2,4,6,15
 
     write /proc/sys/vm/overcommit_memory 1
     write /proc/sys/vm/min_free_order_shift 4
@@ -565,10 +565,32 @@ on boot
     write /proc/sys/kernel/sched_min_granularity_ns 400000
 
     # Simply Tweaks - Kernel Tweaks
+    write /proc/sys/vm/page-cluster 8
     write /proc/sys/kernel/msgmni 2048
     write /proc/sys/kernel/msgmax 64000
     write /proc/sys/kernel/shmmax 268435456
     write /proc/sys/kernel/sem 500 512000 64 2048
+    
+    # Simply Tweaks - GPU Acceleration for UI
+    setprop debug.sf.hw 1
+    setprop debug.performance.tuning 1
+    setprop video.accelerate.hw 1
+    
+    # Simply Tweaks - Net Buffers Tweaks
+    write /proc/sys/net/ipv4/tcp_timestamps 0
+    write /proc/sys/net/ipv4/tcp_tw_reuse 1
+    write /proc/sys/net/ipv4/tcp_sack 1
+    write /proc/sys/net/ipv4/tcp_tw_recycle 1
+    write /proc/sys/net/ipv4/tcp_window_scaling 1
+    write /proc/sys/net/ipv4/tcp_keepalive_probes 5
+    write /proc/sys/net/ipv4/tcp_keepalive_intvl 30
+    write /proc/sys/net/ipv4/tcp_fin_timeout 30
+    write /proc/sys/net/core/wmem_max 404480
+    write /proc/sys/net/core/rmem_max 404480
+    write /proc/sys/net/core/rmem_default 256960
+    write /proc/sys/net/core/wmem_default 256960
+    write /proc/sys/net/ipv4/tcp_wmem 4096,16384,404480
+    write /proc/sys/net/ipv4/tcp_rmem 4096,87380,404480
 
     # Permissions for System Server and daemons.
     chown radio system /sys/android_power/state
