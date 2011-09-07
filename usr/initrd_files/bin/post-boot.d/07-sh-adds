@@ -2,16 +2,8 @@
 
 /bin/sh /voodoo/bin/remount_system_rw
 
-# Do some cleanup in init.d to prevent boot issues
-
 if test -e /system/etc/init.d/S77simplytweaks; then /bin/rm -f /system/etc/init.d/S77simplytweaks; fi
 if test -e /system/etc/init.d/S80galaxian; then /bin/rm -f /system/etc/init.d/S80galaxian; fi
 if test -e /system/etc/init.d/S_volt_scheduler; then /bin/rm -f /system/etc/init.d/S_volt_scheduler; fi
-
-# If we find a bootanimation.zip then we must rename it to sanim.zip to play it!
-
-if test -e /system/media/bootanimation.zip; then
-	/bin/mv /system/media/bootanimation.zip /system/media/sanim.zip;
-fi
 
 /bin/sh /voodoo/bin/remount_system_ro
