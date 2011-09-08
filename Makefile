@@ -354,7 +354,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks \
-		   -mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp \
+		    -mcpu=cortex-a8 -mfpu=vfpv3 -mfloat-abi=hard \
 		   -floop-interchange -floop-strip-mine -floop-block
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 
