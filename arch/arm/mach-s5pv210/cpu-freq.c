@@ -202,7 +202,7 @@ static struct s5pv210_dvs_conf dvs_conf[] = {
 		.int_volt   = DVSINT2,
 	},
 	[L5] = {
-		.arm_volt   = DVSARM5,
+		.arm_volt   = DVSARM6,
 		.int_volt   = DVSINT3,
 	},
 #endif
