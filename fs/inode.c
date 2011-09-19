@@ -1378,6 +1378,12 @@ static int relatime_need_update(struct vfsmount *mnt, struct inode *inode,
 	 */
 	if ((long)(now.tv_sec - inode->i_atime.tv_sec) < 0)
 		return 1;
+	/* 
+	 * Is the previous atime value in future? If yes,
+	 * update atime:
+	 */
+	if ((long)(now.tv_sec - inode->i_atime.tv_sec) < 0)
+    return 1;
 	/*
 	 * Is the previous atime value old than a day? If yes,
 	 * update atime:

@@ -2,8 +2,8 @@
 
 /bin/sh /voodoo/bin/remount_system_rw
 
-if test -e /system/etc/init.d/S77simplytweaks; then /bin/rm -f /system/etc/init.d/S77simplytweaks; fi
-if test -e /system/etc/init.d/S80galaxian; then /bin/rm -f /system/etc/init.d/S80galaxian; fi
-if test -e /system/etc/init.d/S_volt_scheduler; then /bin/rm -f /system/etc/init.d/S_volt_scheduler; fi
+if test -e /system/etc/init.d/S77simplytweaks; then /bin/rm /system/etc/init.d/S77simplytweaks; fi
+if test -e /system/etc/init.d/S80galaxian; then /bin/rm /system/etc/init.d/S80galaxian; fi
+if test -e /system/etc/init.d/S_volt_scheduler; then /bin/rm /system/etc/init.d/S_volt_scheduler; fi
 
 /bin/sh /voodoo/bin/remount_system_ro
