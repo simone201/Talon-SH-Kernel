@@ -28,6 +28,9 @@
 #include <linux/cpu.h>
 #include <linux/completion.h>
 #include <linux/mutex.h>
+#include <linux/earlysuspend.h>
+
+#include <mach/voltages.h>
 
 #define dprintk(msg...) cpufreq_debug_printk(CPUFREQ_DEBUG_CORE, \
 						"cpufreq-core", msg)
@@ -43,6 +46,12 @@ extern unsigned int freq_uv_table[6][3];
 int enabled_freqs[6] = { 1, 1, 1, 1, 1, 1 };
 extern unsigned int gpu[6][2];
 #endif
+
+// int cpufreq_cur_max - will be filled with the current max cpu frequency
+// hopefully this will allow the deep sleep patch to scale back to the proper
+// frequency after waking from sleep
+// *set to compiled in max frequency to prevent warnings about un-initialized variables
+int cpufreq_cur_max = TOPCPUFREQUENCY;
 
 /**
  * The "cpufreq driver" - the arch- or hardware-dependent low
@@ -2140,6 +2149,59 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
 }
 EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
 
+static void powersave_early_suspend(struct early_suspend *handler)
+{
+  int cpu;
+
+  for_each_online_cpu(cpu) {
+    struct cpufreq_policy *cpu_policy, new_policy;
+
+    cpu_policy = cpufreq_cpu_get(cpu);
+    if (!cpu_policy)
+      return;
+    if (cpufreq_get_policy(&new_policy, cpu))
+      goto out;
+// just before setting up the new policy, we will save the max freq from the old policy
+    cpufreq_cur_max = cpu_policy->user_policy.max;
+    new_policy.max = 800000;
+    new_policy.min = 100000;
+    __cpufreq_set_policy(cpu_policy, &new_policy);
+    cpu_policy->user_policy.policy = cpu_policy->policy;
+    cpu_policy->user_policy.governor = cpu_policy->governor;
+  out:
+    cpufreq_cpu_put(cpu_policy);
+  }
+}
+
+static void powersave_late_resume(struct early_suspend *handler)
+{
+  int cpu;
+
+  for_each_online_cpu(cpu) {
+    struct cpufreq_policy *cpu_policy, new_policy;
+
+    cpu_policy = cpufreq_cpu_get(cpu);
+    if (!cpu_policy)
+      return;
+    if (cpufreq_get_policy(&new_policy, cpu))
+      goto out;
+// use cpufreq_cur_max to reset the correct max frequency when awakening
+	new_policy.max = cpufreq_cur_max;
+    new_policy.min = 200000;
+    __cpufreq_set_policy(cpu_policy, &new_policy);
+    cpu_policy->user_policy.policy = cpu_policy->policy;
+    cpu_policy->user_policy.governor = cpu_policy->governor;
+  out:
+    cpufreq_cpu_put(cpu_policy);
+  }
+}
+
+static struct early_suspend _powersave_early_suspend = {
+  .suspend = powersave_early_suspend,
+  .resume = powersave_late_resume,
+  .level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN,
+};
+
 static int __init cpufreq_core_init(void)
 {
 	int cpu;
@@ -2153,6 +2215,7 @@ static int __init cpufreq_core_init(void)
 						&cpu_sysdev_class.kset.kobj);
 	BUG_ON(!cpufreq_global_kobject);
 
+	register_early_suspend(&_powersave_early_suspend);
 	return 0;
 }
 core_initcall(cpufreq_core_init);

@@ -572,6 +572,7 @@ void s5pv210_lock_dvfs_high_level(uint nToken, uint perf_level)
 	uint freq_level;
 	struct cpufreq_policy *policy;
 
+	return
 	printk(KERN_DEBUG "%s : lock with token(%d) level(%d) current(%X)\n",
 			__func__, nToken, perf_level, g_dvfs_high_lock_token);
 
@@ -681,10 +682,12 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
 	}
 
 #ifdef CONFIG_DVFS_LIMIT
+#if 0
 	if (g_dvfs_high_lock_token) {
 		if (index > g_dvfs_high_lock_limit)
 			index = g_dvfs_high_lock_limit;
 	}
+#endif
 #endif
 
 	arm_clk = freq_table[index].frequency;
@@ -1039,7 +1042,7 @@ static int __init s5pv210_cpufreq_driver_init(struct cpufreq_policy *policy)
 
 	cpufreq_frequency_table_get_attr(freq_table, policy->cpu);
 
-	policy->cpuinfo.transition_latency = 35000;	/* 1us */
+	policy->cpuinfo.transition_latency = 10000;	/* 1us */
 
 	rate = clk_get_rate(mpu_clk);
 	i = 0;
